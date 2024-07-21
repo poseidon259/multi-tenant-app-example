@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  php82:
+    build:
+      args:
+        user: trqhung
+        uid: 1000
+      context: ./docker/php82
+      dockerfile: Dockerfile
+    container_name: my_php82
+    image: my_php82
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/html
+    links:
+      - postgres
+      - redis
+    networks:
+      - my_network
+      
+  postgres:
+    build:
+      context: ./docker/postgresql
+      dockerfile: Dockerfile
+    container_name: my_postgres
+    image: my_postgres
+    environment:
+      POSTGRES_USER: trqhung
+      POSTGRES_PASSWORD: Amela@123
+    ports:
+      - "5499:5432"
+    volumes:
+      - ./docker/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - my_network
+  
+  redis:
+    build:
+      context: ./docker/redis
+      dockerfile: Dockerfile
+    container_name: my_redis
+    image: my_redis
+    ports:
+      - "6399:6379"
+    volumes:
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - my_network
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    container_name: my_nginx
+    image: my_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/app.conf
+      - .:/var/www/html
+    networks:
+      - my_network
+    depends_on:
+      - postgres
+      - redis
+      - php82
+      
+networks:
+  my_network:
+    driver: bridge

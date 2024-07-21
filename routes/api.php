@@ -20,7 +20,7 @@ Route::middleware([
     \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::get('/', function (Request $request) {
-        $user = \App\Infrastucture\Models\User::all();
+        $user = \App\Infrastructure\Models\User::all();
         return [
             'message' => 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id'),
             'user' => $user

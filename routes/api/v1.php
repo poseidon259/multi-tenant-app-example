@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\App\Api\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'auth', 'middleware' => []], function () {
-    Route::post('login', []);
+Route::get('/', function () {
+    return response()->json(['message' => 'Hello, World!', 'file' => __FILE__]);
+});
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [AuthController::class, 'login']);
+});
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/user', function (\Illuminate\Http\Request $request) {
+        return $request->user();
+    });
 });

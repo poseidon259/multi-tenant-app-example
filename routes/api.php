@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +16,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware([
-    'api',
-    \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-    \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/', function (Request $request) {
-        $user = \App\Infrastructure\Models\User::all();
-        return [
-            'message' => 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id'),
-            'user' => $user
-        ];
-    });
-});
 
 

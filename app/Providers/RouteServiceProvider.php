@@ -30,7 +30,6 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-
         $this->routes(function () {
             $this->mapApiV1Routes();
             $this->mapApiV2Routes();
@@ -48,7 +47,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/v1')
             ->middleware([
-                'api',
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,
             ])
@@ -59,7 +57,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/v2')
             ->middleware([
-                'api',
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,
             ])

@@ -12,14 +12,14 @@ class LoginAction extends BaseAction
     {
         $credentials = $request->only('email', 'password');
 
-        if (!Auth::guard('api')->attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             return $this->sendError(
                 error: null,
                 message: __('messages.unauthenticated')
             );
         }
 
-        $user = Auth::guard('api')->user();
+        $user = Auth::user();
         $token = $user->createToken('authToken')->accessToken;
 
         return $this->sendResponse(

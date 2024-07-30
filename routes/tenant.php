@@ -23,7 +23,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/', function () {
+    Route::get('/test', function () {
         $user = \App\Infrastructure\Models\User::all();
         return [
             'message' => 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id'),

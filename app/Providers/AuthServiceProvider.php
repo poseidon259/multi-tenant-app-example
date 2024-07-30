@@ -4,7 +4,10 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,8 +28,21 @@ class AuthServiceProvider extends ServiceProvider
         //
         $this->registerPolicies();
 
+        Route::group([
+            'as' => 'passport.',
+            'middleware' => [
+                InitializeTenancyByDomain::class, // Use tenancy initialization middleware of your choice
+                PreventAccessFromCentralDomains::class,
+            ],
+            'prefix' => config('passport.path', 'oauth'),
+            'namespace' => 'Laravel\Passport\Http\Controllers',
+        ], function () {
+            $this->loadRoutesFrom(__DIR__ . "/../../vendor/laravel/passport/src/../routes/web.php");
+        });
+
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+        Passport::loadKeysFrom(storage_path());
     }
 }

@@ -21,9 +21,3 @@ Route::get('/', function () {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
 });
-
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/user', function (\Illuminate\Http\Request $request) {
-        return $request->user();
-    });
-});

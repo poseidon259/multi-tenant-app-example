@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\App\Api\Controllers\AuthController;
-
+use App\App\Api\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API V1 Routes
@@ -20,4 +20,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
+});
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'my'], function () {
+    Route::get('/info', [UserController::class, 'getInfo']);
 });

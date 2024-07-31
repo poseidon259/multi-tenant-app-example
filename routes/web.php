@@ -17,3 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => 'auth:web', 'prefix' => 'my'], function () {
+    Route::get('/info', [\App\App\Api\Controllers\UserController::class, 'getInfo']);
+});
+

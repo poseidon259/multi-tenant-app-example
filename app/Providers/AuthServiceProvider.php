@@ -31,8 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         Route::group([
             'as' => 'passport.',
             'middleware' => [
-                InitializeTenancyByDomain::class, // Use tenancy initialization middleware of your choice
-                PreventAccessFromCentralDomains::class,
+                'universal',
+                InitializeTenancyByDomain::class
             ],
             'prefix' => config('passport.path', 'oauth'),
             'namespace' => 'Laravel\Passport\Http\Controllers',
